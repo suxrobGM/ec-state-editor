@@ -27,5 +27,6 @@
         <TextBlock TextAlignment="Center" Text="{Binding ElementName=progressBar, Path=Value, StringFormat={}{0:0}% }" HorizontalAlignment="Left" Margin="169,402,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="14"/>
         <Button Content="Load" Style="{DynamicResource ButtonStyle}" Command="{Binding LoadCommand}" HorizontalAlignment="Left" Margin="10,423,0,0" VerticalAlignment="Top" Width="63"/>
         <Button Content="Save" Style="{DynamicResource ButtonStyle}" Command="{Binding SaveCommand}" HorizontalAlignment="Left" Margin="73,423,0,0" VerticalAlignment="Top" Width="63"/>
+        <Button Content="Reload" Style="{DynamicResource ButtonStyle}" Command="{Binding ReloadCommand}" HorizontalAlignment="Left" Margin="136,423,0,0" VerticalAlignment="Top" Width="63"/>
     </Grid>
 </Window>

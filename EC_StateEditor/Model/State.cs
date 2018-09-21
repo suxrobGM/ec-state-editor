@@ -51,7 +51,7 @@ namespace EC_StateEditor.Model
 
         public void SaveContent(string pathToStatesFolder)
         {           
-            List<string> buffer = File.ReadAllLines(pathToStatesFolder + "\\" + FileName).ToList();
+            var buffer = File.ReadAllLines(pathToStatesFolder + "\\" + FileName).ToList();
 
             for (int i = 0; i < buffer.Count; i++)
             {
@@ -101,7 +101,7 @@ namespace EC_StateEditor.Model
                         idString = DeleteComment(idString);
 
                     idString = idString.Replace(" ", "").Remove(0, "id".Length + 1);                                           
-                    id = int.Parse(idString);
+                    int.TryParse(idString, out id);
                     break;
                 }        
             }
@@ -141,7 +141,7 @@ namespace EC_StateEditor.Model
                         manpowerString = DeleteComment(manpowerString);
 
                     manpowerString = manpowerString.Replace(" ", "").Remove(0, "manpower".Length + 1);
-                    manpower = int.Parse(manpowerString);
+                    int.TryParse(manpowerString, out manpower);
                     break;
                 }
             }

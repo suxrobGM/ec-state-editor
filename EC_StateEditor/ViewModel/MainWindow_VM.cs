@@ -47,6 +47,7 @@ namespace EC_StateEditor.ViewModel
         public DelegateCommand LoadCommand { get; }
         public DelegateCommand SaveCommand { get; }
         public DelegateCommand SetModPathCommand { get; }
+        public DelegateCommand ReloadCommand { get; }
 
         public MainWindow_VM()
         {
@@ -62,6 +63,15 @@ namespace EC_StateEditor.ViewModel
                 SaveData(modPath + @"\history\states");
             });
 
+            ReloadCommand = new DelegateCommand(() =>
+            {
+                if(States.Count != 0)
+                {
+                    States.Clear();
+                    LoadData(modPath + @"\history\states");
+                }
+            });
+
             SetModPathCommand = new DelegateCommand(() =>
             {
                 var dialog = new FolderBrowserDialog
@@ -70,8 +80,7 @@ namespace EC_StateEditor.ViewModel
                     SelectedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Paradox Interactive", "Hearts of Iron IV", "mod")
                 };
                 dialog.ShowDialog();
-                modPath = dialog.SelectedPath;
-                RaisePropertyChanged("ModPath");
+                modPath = dialog.SelectedPath;              
             });
         }
 
