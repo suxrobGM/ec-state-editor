@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Windows.Forms;
@@ -15,13 +16,34 @@ namespace EC_StateEditor.ViewModel
 {
     class MainWindow_VM : BindableBase
     {
-        private int progressCount;
-        private int progressMaxValue;
+        private int progressPercentage;
         private string modPath;
 
         public ObservableCollection<State> States { get; }
-        public string ModPath { get => modPath; }
-        public int ProgressPercentage { get => GetPercentage(progressCount, progressMaxValue); }
+        public string ModPath
+        {
+            get
+            {
+                return modPath;
+            }
+            set
+            {
+                modPath = value;
+                RaisePropertyChanged(nameof(ModPath));
+            }
+        }
+        public int ProgressPercentage
+        {
+            get
+            {
+                return progressPercentage;
+            }
+            set
+            {             
+                progressPercentage = value;
+                RaisePropertyChanged(nameof(ProgressPercentage));     
+            }
+        }
         public DelegateCommand LoadCommand { get; }
         public DelegateCommand SaveCommand { get; }
         public DelegateCommand SetModPathCommand { get; }
@@ -37,7 +59,7 @@ namespace EC_StateEditor.ViewModel
 
             SaveCommand = new DelegateCommand(() =>
             {
-
+                SaveData(modPath + @"\history\states");
             });
 
             SetModPathCommand = new DelegateCommand(() =>
@@ -56,15 +78,15 @@ namespace EC_StateEditor.ViewModel
         private void LoadData(string pathToStatesFolder)
         {
             var files = Directory.GetFiles(pathToStatesFolder, "*.txt", SearchOption.TopDirectoryOnly);
-            progressMaxValue = files.Length;
-            progressCount = 0;
+            int progressMaxValue = files.Length;
+            int progressCount = 0;
 
             foreach (var file in files)
-            {
-                progressCount++;
+            {          
                 var buffer = File.ReadAllLines(file);
                 States.Add(new State
                 {
+                    FileName = State.ParseFileName(file),
                     Id = State.ParseId(buffer),
                     Manpower = State.ParseManpower(buffer),
                     Name = State.ParseName(file),
@@ -72,13 +94,25 @@ namespace EC_StateEditor.ViewModel
                     Religion = State.ParseReligion(buffer),
                     StateCategory = State.ParseStateCategory(buffer)
                 });
-                RaisePropertyChanged(nameof(this.ProgressPercentage));
+                progressCount++;
+                ProgressPercentage = GetPercentage(progressCount, progressMaxValue);              
             }
         }
 
         private void SaveData(string pathToStatesFolder)
         {
+            Task.Run(()=> 
+            {               
+                int progressMaxValue = States.Count;
+                int progressCount = 0;
 
+                foreach (var state in States)
+                {
+                    state.SaveContent(pathToStatesFolder);
+                    progressCount++;
+                    ProgressPercentage = GetPercentage(progressCount, progressMaxValue);                    
+                }
+            });
         }
 
         private int GetPercentage(int value, int maxValue)

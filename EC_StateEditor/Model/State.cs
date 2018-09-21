@@ -39,6 +39,7 @@ namespace EC_StateEditor.Model
 
     class State
     {
+        public string FileName { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
         public string Owner { get; set; }
@@ -47,6 +48,32 @@ namespace EC_StateEditor.Model
         public StateCategories StateCategory { get; set; }
         public int[] Provinces { get; set; }
 
+
+        public void SaveContent(string pathToStatesFolder)
+        {           
+            List<string> buffer = File.ReadAllLines(pathToStatesFolder + "\\" + FileName).ToList();
+
+            for (int i = 0; i < buffer.Count; i++)
+            {
+                if (buffer[i].Contains("id"))
+                    buffer[i] = $"\tid = {Id}";
+                if (buffer[i].Contains("owner"))
+                    buffer[i] = $"\t\towner = {Owner}";
+                if (buffer[i].Contains("manpower"))
+                    buffer[i] = $"\tmanpower = {Manpower}";
+                if (buffer[i].Contains("set_state_flag"))
+                    buffer[i] = $"\t\tset_state_flag = {Religion}";
+                if (buffer[i].Contains("state_category"))
+                    buffer[i] = $"\tstate_category = {StateCategory}";
+            }
+
+            File.WriteAllLines(pathToStatesFolder + "\\" + FileName, buffer.ToArray());
+        }
+
+        public static string ParseFileName(string pathToFileName)
+        {
+            return Path.GetFileName(pathToFileName);
+        }
 
         public static string ParseName(string fileName)
         {
@@ -185,7 +212,7 @@ namespace EC_StateEditor.Model
 
             return StateCategories.wasteland;
         }
-
+        
         private static bool CheckComment(string str)
         {
             if (Regex.IsMatch(str, @".?#.*"))
