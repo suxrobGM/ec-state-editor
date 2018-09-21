@@ -97,6 +97,7 @@ namespace EC_StateEditor.ViewModel
                 {
                     FileName = State.ParseFileName(file),
                     Id = State.ParseId(buffer),
+                    LocalizationToken = State.ParseLocalizationToken(buffer),
                     Manpower = State.ParseManpower(buffer),
                     Name = State.ParseName(file),
                     Owner = State.ParseOwner(buffer),

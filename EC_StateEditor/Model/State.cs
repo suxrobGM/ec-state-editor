@@ -42,6 +42,7 @@ namespace EC_StateEditor.Model
         public string FileName { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
+        public string LocalizationToken { get; set; }
         public string Owner { get; set; }
         public int Manpower { get; set; }
         public Religions Religion { get; set; }
@@ -57,6 +58,8 @@ namespace EC_StateEditor.Model
             {
                 if (buffer[i].Contains("id"))
                     buffer[i] = $"\tid = {Id}";
+                if (buffer[i].Contains("name"))
+                    buffer[i] = $"\tname = \"{LocalizationToken}\"";
                 if (buffer[i].Contains("owner"))
                     buffer[i] = $"\t\towner = {Owner}";
                 if (buffer[i].Contains("manpower"))
@@ -86,6 +89,26 @@ namespace EC_StateEditor.Model
                 //name = name.Remove(txtExtension.Index, txtExtension.Length); //delete .txt in end of substring
             }
             return name;
+        }
+
+        public static string ParseLocalizationToken(string[] fileContent)
+        {
+            string localizationToken = String.Empty;
+
+            foreach (var content in fileContent)
+            {
+                if (content.Contains("name"))
+                {
+                    localizationToken = content.Trim();
+
+                    if (CheckComment(localizationToken))
+                        localizationToken = DeleteComment(localizationToken);
+
+                    localizationToken = localizationToken.Replace(" ", "").Replace("\"", "").Remove(0, "name".Length + 1);
+                    break;
+                }
+            }
+            return localizationToken;
         }
 
         public static int ParseId(string[] fileContent)

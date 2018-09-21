@@ -18,7 +18,7 @@
                 <GradientStop Color="#FF71B2CA" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <DataGrid ItemsSource="{Binding States}" HorizontalAlignment="Left" Height="341" Margin="10,56,0,0" VerticalAlignment="Top" Width="774"/>
+        <DataGrid CanUserResizeRows="False" CanUserAddRows="False" CanUserDeleteRows="False" ItemsSource="{Binding States}" HorizontalAlignment="Left" Height="341" Margin="10,56,0,0" VerticalAlignment="Top" Width="774"/>
         <TextBlock x:Name="versionLabel" HorizontalAlignment="Left" Margin="657,402,0,0" TextWrapping="Wrap" Text="Version: " VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="657,423,0,0" TextWrapping="Wrap" Text="Developed by SuxrobGM" VerticalAlignment="Top" FontStyle="Italic"/>
         <TextBlock x:Name="modPath_TB" HorizontalAlignment="Left" Margin="10,20,0,0" TextWrapping="Wrap" Text="{Binding Path=ModPath}" VerticalAlignment="Top" Background="{DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}" Width="372" Height="19" FontSize="10"/>
