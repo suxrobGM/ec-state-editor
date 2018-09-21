@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:EC_StateEditor.ViewModel"
         mc:Ignorable="d"
         Title="Hearts of Iron IV: Economic Crisis State Editor" 
-        Height="478.442" 
-        Width="800">
+        Height="483" 
+        Width="810">
     <Window.DataContext>
         <local:MainWindow_VM/>
     </Window.DataContext>
@@ -18,8 +18,14 @@
                 <GradientStop Color="#FF71B2CA" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <DataGrid HorizontalAlignment="Left" Height="341" Margin="10,56,0,0" VerticalAlignment="Top" Width="774"/>
+        <DataGrid ItemsSource="{Binding States}" HorizontalAlignment="Left" Height="341" Margin="10,56,0,0" VerticalAlignment="Top" Width="774"/>
         <TextBlock x:Name="versionLabel" HorizontalAlignment="Left" Margin="657,402,0,0" TextWrapping="Wrap" Text="Version: " VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="657,423,0,0" TextWrapping="Wrap" Text="Developed by SuxrobGM" VerticalAlignment="Top" FontStyle="Italic"/>
+        <TextBlock x:Name="modPath_TB" HorizontalAlignment="Left" Margin="10,20,0,0" TextWrapping="Wrap" Text="{Binding Path=ModPath}" VerticalAlignment="Top" Background="{DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}" Width="372" Height="19" FontSize="10"/>
+        <Button Content="..." TextBlock.TextAlignment="Center" Command="{Binding SetModPathCommand}" HorizontalAlignment="Left" Margin="382,20,0,0" VerticalAlignment="Top" Width="35"/>
+        <ProgressBar x:Name="progressBar" Value="{Binding Path=ProgressPercentage, Mode=OneTime}" HorizontalAlignment="Left" Height="14" Margin="10,402,0,0" VerticalAlignment="Top" Width="353"/>
+        <TextBlock TextAlignment="Center" Text="{Binding ElementName=progressBar, Path=Value, StringFormat={}{0:0}% }" HorizontalAlignment="Left" Margin="169,402,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="14"/>
+        <Button Content="Load" Style="{DynamicResource ButtonStyle}" Command="{Binding LoadCommand}" HorizontalAlignment="Left" Margin="10,423,0,0" VerticalAlignment="Top" Width="63"/>
+        <Button Content="Save" Style="{DynamicResource ButtonStyle}" HorizontalAlignment="Left" Margin="73,423,0,0" VerticalAlignment="Top" Width="63"/>
     </Grid>
 </Window>

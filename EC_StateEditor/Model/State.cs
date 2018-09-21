@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace EC_StateEditor.Model
 {
@@ -19,18 +21,118 @@ namespace EC_StateEditor.Model
         witoutReligion
     }
 
+    enum StateCategories
+    {
+        city,
+        enclave,
+        large_city,
+        large_town,
+        megalopolis,
+        metropolis,
+        pastoral,
+        rural,
+        small_island,
+        tiny_island,
+        town,
+        wasteland
+    }
+
     class State
     {
+        public int Id { get; set; }
         public string Name { get; set; }
+        public string Owner { get; set; }
+        public int Manpower { get; set; }
         public Religions Religion { get; set; }
+        public StateCategories StateCategory { get; set; }
+        public int[] Provinces { get; set; }
 
-        public static Religions GetReligion(List<string> fileContent)
+
+        public static string ParseName(string fileName)
+        {
+            string name = Path.GetFileNameWithoutExtension(fileName);
+            if (Regex.IsMatch(name, @"^\d+-\D+"))
+            {
+                var numberMatch = Regex.Match(name, @"^\d+-"); //delete numbers in start of substring
+                name = name.Remove(numberMatch.Index, numberMatch.Length);
+                //var txtExtension = Regex.Match(name, @"\.txt");
+                //name = name.Remove(txtExtension.Index, txtExtension.Length); //delete .txt in end of substring
+            }
+            return name;
+        }
+
+        public static int ParseId(string[] fileContent)
+        {
+            int id = 0;
+            foreach (var content in fileContent)
+            {
+                if(content.Contains("id"))
+                {
+                    string idString = content.Trim();
+
+                    if (CheckComment(idString))
+                        idString = DeleteComment(idString);
+
+                    idString = idString.Replace(" ", "").Remove(0, "id".Length + 1);                                           
+                    id = int.Parse(idString);
+                    break;
+                }        
+            }
+            return id;
+        }
+
+        public static string ParseOwner(string[] fileContent)
+        {
+            string owner = String.Empty;
+
+            foreach (var content in fileContent)
+            {
+                if (content.Contains("owner"))
+                {
+                    owner = content.Trim();
+
+                    if (CheckComment(owner))
+                        owner = DeleteComment(owner);
+
+                    owner = owner.Replace(" ", "").Remove(0, "owner".Length + 1);                   
+                    break;
+                }
+            }
+            return owner;
+        }
+
+        public static int ParseManpower(string[] fileContent)
+        {
+            int manpower = 0;
+            foreach (var content in fileContent)
+            {
+                if (content.Contains("manpower"))
+                {
+                    string manpowerString = content.Trim();
+
+                    if (CheckComment(manpowerString))
+                        manpowerString = DeleteComment(manpowerString);
+
+                    manpowerString = manpowerString.Replace(" ", "").Remove(0, "manpower".Length + 1);
+                    manpower = int.Parse(manpowerString);
+                    break;
+                }
+            }
+            return manpower;
+        }
+
+        public static Religions ParseReligion(string[] fileContent)
         {
             foreach (var content in fileContent)
             {
                 if(content.Contains("set_state_flag"))
                 {
-                    string religionString = content.Trim().Replace(" ", "").Remove(0, "set_state_flag".Length + 1);
+                    string religionString = content.Trim();
+
+                    if (CheckComment(religionString))
+                        religionString = DeleteComment(religionString);
+
+                    religionString = religionString.Replace(" ", "").Remove(0, "set_state_flag".Length + 1);
 
                     switch (religionString)
                     {
@@ -48,6 +150,54 @@ namespace EC_StateEditor.Model
             }
            
             return Religions.witoutReligion;
+        }
+
+        public static StateCategories ParseStateCategory(string[] fileContent)
+        {
+            foreach (var content in fileContent)
+            {
+                if (content.Contains("state_category"))
+                {
+                    string stateCategoryString = content.Trim();
+
+                    if (CheckComment(stateCategoryString))
+                        stateCategoryString = DeleteComment(stateCategoryString);
+
+                    stateCategoryString = stateCategoryString.Replace(" ", "").Remove(0, "state_category".Length + 1);
+
+                    switch (stateCategoryString)
+                    {
+                        case "city": return StateCategories.city;
+                        case "enclave": return StateCategories.enclave;
+                        case "large_city": return StateCategories.large_city;
+                        case "large_town": return StateCategories.large_town;
+                        case "megalopolis": return StateCategories.megalopolis;
+                        case "metropolis": return StateCategories.metropolis;
+                        case "pastoral": return StateCategories.pastoral;
+                        case "rural": return StateCategories.rural;
+                        case "small_island": return StateCategories.small_island;
+                        case "tiny_island": return StateCategories.tiny_island;
+                        case "town": return StateCategories.town;
+                        default: return StateCategories.wasteland;
+                    }
+                }
+            }
+
+            return StateCategories.wasteland;
+        }
+
+        private static bool CheckComment(string str)
+        {
+            if (Regex.IsMatch(str, @".?#.*"))
+                return true;
+            return false;
+        }
+
+        private static string DeleteComment(string str)
+        {
+            var commentMatch = Regex.Match(str, @".?#.*");
+            var strWithOutComment = str.Remove(commentMatch.Index, commentMatch.Length);
+            return strWithOutComment;
         }
     }
 }
