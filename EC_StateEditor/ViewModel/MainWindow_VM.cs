@@ -98,6 +98,9 @@ namespace EC_StateEditor.ViewModel
 
         private void LoadData(string pathToStatesFolder)
         {
+            if (!Directory.Exists(pathToStatesFolder))
+                return;
+
             var files = Directory.GetFiles(pathToStatesFolder, "*.txt", SearchOption.TopDirectoryOnly);
             int progressMaxValue = files.Length;
             int progressCount = 0;
@@ -123,6 +126,9 @@ namespace EC_StateEditor.ViewModel
 
         private void SaveData(string pathToStatesFolder)
         {
+            if (!Directory.Exists(pathToStatesFolder))
+                return;
+
             Task.Run(()=> 
             {               
                 int progressMaxValue = States.Count;
