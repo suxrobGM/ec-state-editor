@@ -80,7 +80,7 @@ namespace EC_StateEditor.ViewModel
                     SelectedPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Paradox Interactive", "Hearts of Iron IV", "mod")
                 };
                 dialog.ShowDialog();
-                modPath = dialog.SelectedPath;              
+                ModPath = dialog.SelectedPath;              
             });
         }
 
