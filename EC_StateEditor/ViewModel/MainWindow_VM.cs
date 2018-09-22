@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Windows.Forms;
 using System.IO;
+using System.Reflection;
 using Prism.Mvvm;
 using Prism.Commands;
 using EC_StateEditor.Model;
@@ -18,17 +19,20 @@ namespace EC_StateEditor.ViewModel
     {
         private int progressPercentage;
         private string modPath;
+        private string settingsXmlFileName = "Settings.xml";
+        private SettingsXML settingsXML;
 
         public ObservableCollection<State> States { get; }
         public string ModPath
         {
             get
-            {
+            {            
                 return modPath;
             }
             set
             {
                 modPath = value;
+                settingsXML.ModPath = value;
                 RaisePropertyChanged(nameof(ModPath));
             }
         }
@@ -44,10 +48,12 @@ namespace EC_StateEditor.ViewModel
                 RaisePropertyChanged(nameof(ProgressPercentage));     
             }
         }
+        public Version AppVersion { get => Assembly.GetExecutingAssembly().GetName().Version; }
         public DelegateCommand LoadCommand { get; }
         public DelegateCommand SaveCommand { get; }
         public DelegateCommand SetModPathCommand { get; }
         public DelegateCommand ReloadCommand { get; }
+        public DelegateCommand WindowsLoadEventCommand { get; }
 
         public MainWindow_VM()
         {
@@ -81,6 +87,12 @@ namespace EC_StateEditor.ViewModel
                 };
                 dialog.ShowDialog();
                 ModPath = dialog.SelectedPath;              
+            });
+
+            WindowsLoadEventCommand = new DelegateCommand(() =>
+            {              
+                settingsXML = new SettingsXML(settingsXmlFileName);
+                ModPath = settingsXML.ModPath;
             });
         }
 

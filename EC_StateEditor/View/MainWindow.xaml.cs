@@ -12,7 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Reflection;
 
 namespace EC_StateEditor
 {
@@ -23,8 +22,7 @@ namespace EC_StateEditor
     {
         public MainWindow()
         {
-            InitializeComponent();
-            versionLabel.Text = $"Version: {Assembly.GetExecutingAssembly().GetName().Version}";
+            InitializeComponent();                    
         }
     }
 }
