@@ -93,7 +93,7 @@ namespace EC_StateEditor.ViewModel
             {              
                 settingsXML = new SettingsXML(settingsXmlFileName);
                 ModPath = settingsXML.ModPath;
-            });
+            });          
         }
 
         private void LoadData(string pathToStatesFolder)

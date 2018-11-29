@@ -51,10 +51,10 @@ namespace EC_StateEditor.Model
 
 
         public void SaveContent(string pathToStatesFolder)
-        {           
-            var buffer = File.ReadAllLines(pathToStatesFolder + "\\" + FileName).ToList();
+        {
+            var buffer = File.ReadAllLines(pathToStatesFolder + "\\" + FileName);
 
-            for (int i = 0; i < buffer.Count; i++)
+            for (int i = 0; i < buffer.Length; i++)
             {
                 if (buffer[i].Contains("id"))
                     buffer[i] = $"\tid = {Id}";
